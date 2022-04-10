@@ -14,7 +14,7 @@ async function getEmployee(firstName) {
     return employee;
 }
 async function login(loginDetails) {
-    let sql = `SELECT * FROM employees.employees WHERE email=? AND password=?`;
+    let sql = `SELECT * FROM employees WHERE email=? AND password=?`;
     let parameters = [loginDetails.email, loginDetails.password];
     const successfulLoginData = await connection.executeWithParameters(sql, parameters);
     return successfulLoginData;

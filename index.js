@@ -9,7 +9,7 @@ const server = express();
 
 const port = process.env.PORT || 8080;
 server.use(express.static('./public'));
-server.use(cors({ origin: ["*", "http://localhost:8080", "http://localhost:3000"] }));
+server.use(cors({ origin: "*" }));
 
 server.use(express.json());
 

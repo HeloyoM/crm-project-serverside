@@ -26,7 +26,28 @@ async function register(employee) {
     const registration = await connection.executeWithParameters(sql, parameters);
     return registration;
 }
-
+async function googleRegister(username, email, picture) {
+    let sql = `INSERT INTO employees (firstName, email, picture) VALUES (?, ?, ?)`;
+    let parameters = [username, email, picture];
+    const registerWithGoogleAccount = await connection.executeWithParameters(sql, parameters);
+    return registerWithGoogleAccount;
+};
+async function upsertGoogleAccount(username, email, picture) {
+    let sql = `UPDATE employees SET firstNme=?, picture=? WHERE email =?`;
+    let parameters = [username, picture, email];
+    const updatingGoogleAccountDetails = await connection.executeWithParameters(sql, parameters);
+    return updatingGoogleAccountDetails;
+};
+async function googleLogin(username, email, picture) {
+    let sql = `SELECT * FROM employees WHERE firstName=? AND email=?`;
+    let parameters = [username, email];
+    const registration = await connection.executeWithParameters(sql, parameters);
+    if (!registration.length) {
+        await googleRegister(username, email, picture);
+    }
+    const petch = await upsertGoogleAccount(username, email, picture);
+    return petch;
+}
 async function update(dataToUpdate) {
     let sql = `UPDATE employees SET firstName=?, lastName=?, email=?, password=? WHERE employeeId = ?`;
     let parameters = [dataToUpdate.firstName, dataToUpdate.lastName, dataToUpdate.email, dataToUpdate.password, dataToUpdate.employeeId];
@@ -51,6 +72,7 @@ module.exports = {
     getAllEmployees,
     getEmployee,
     login,
+    googleLogin,
     register,
     update,
     deleteEmployee,

@@ -24,12 +24,20 @@ router.post("/login", async (req, res) => {
     try {
         const loginDetails = req.body;
         const token = await employeesLogic.login(loginDetails);
-        console.log(token)
         res.json(token)
     } catch (e) {
         res.json(e)
     }
 })
+router.post("/google-login", async (req, res) => {
+    try {
+        const token = req.body.user;
+        const connect = await employeesLogic.googleLogin(token);
+        res.json(connect)
+    } catch (e) {
+        res.json(e)
+    }
+});
 router.post("/", async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);

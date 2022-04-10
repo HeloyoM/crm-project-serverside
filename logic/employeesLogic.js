@@ -6,6 +6,11 @@ const bcrypt = require("bcryptjs");
 const { secret } = require('../config.json');
 const connection = require("../dao/connection-wrapper");
 
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
+const dotenv = require('dotenv');
+dotenv.config();
+
 async function getAllEmployees() {
     const allEmployees = await employeesDao.getAllEmployees();
     return allEmployees;
@@ -27,7 +32,7 @@ async function login(loginDetails) {
         password: findEmployee[0].password,
         userType: findEmployee[0].userType
     });
-    
+
     if (!await bcrypt.compare(loginDetails.password, employee.password)) {
         throw new ServerError(errorType.INVALID_PASSWORD.message);
     } else {
@@ -36,6 +41,16 @@ async function login(loginDetails) {
         return token;
     }
 }
+async function googleLogin(token) {
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.REACT_APP_GOOGLE_CLIENT_ID
+    });
+    const { name: username, email, picture } = ticket.getPayload();
+    await employeesDao.googleLogin(username, email, picture);
+    const tokenId = jwt.sign({ username, email, picture }, secret);
+    return tokenId;
+};
 
 async function register(employee) {
     const checkEmail = await employeesDao.isAlreadyRegistered(employee.email);
@@ -58,6 +73,7 @@ module.exports = {
     getAllEmployees,
     getEmployee,
     login,
+    googleLogin,
     register,
     update,
     deleteEmployee

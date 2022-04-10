@@ -2,7 +2,7 @@ const connection = require('./connection-wrapper');
 
 
 async function getAllEmployees() {
-    let sql = `SELECT * FROM employees`;
+    let sql = `SELECT employeeId, firstName, lastName, email FROM employees`;
     let parameters = [];
     const allEmployees = await connection.executeWithParameters(sql, parameters);
     return allEmployees

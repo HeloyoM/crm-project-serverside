@@ -24,6 +24,7 @@ router.post("/login", async (req, res) => {
     try {
         const loginDetails = req.body;
         const token = await employeesLogic.login(loginDetails);
+        console.log(token)
         res.json(token)
     } catch (e) {
         res.json(e)

@@ -46,6 +46,7 @@ async function googleLogin(token) {
         idToken: token,
         audience: process.env.REACT_APP_GOOGLE_CLIENT_ID
     });
+    console.log(ticket)
     const { name: username, email, picture } = ticket.getPayload();
     await employeesDao.googleLogin(username, email, picture);
     const tokenId = jwt.sign({ username, email, picture }, secret);

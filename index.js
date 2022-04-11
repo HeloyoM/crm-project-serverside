@@ -18,5 +18,6 @@ server.use("/employees", employeesController);
 server.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 });
+
 server.use(errorHandler);
 server.listen(port, () => console.log("listening on ", port));

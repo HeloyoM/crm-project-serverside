@@ -5,9 +5,9 @@ class ServerError extends Error {
         this.errorType = errorType;
         this.innerError = innerError;
     }
-
+    
     [Symbol.iterator]() {
-        let current = this;
+        let current = this; 
         let done = false;
         const iterator = {
             next() {
